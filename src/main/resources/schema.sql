@@ -186,14 +186,14 @@ CREATE TABLE IF NOT EXISTS food_order(
     FOREIGN KEY (menu_id) REFERENCES menu(menu_id) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
-CREATE TABLE IF NOT EXISTS serving(
-    serving_id BIGINT NOT NULL AUTO_INCREMENT,
+CREATE TABLE IF NOT EXISTS order(
+    order_id BIGINT NOT NULL AUTO_INCREMENT,
     employee_id BIGINT,
-    servingTime DATETIME,
+    orderTime DATETIME,
     food_order_id BIGINT,
     customer_id BIGINT,
     total_cost DECIMAL(10, 2),
-    PRIMARY KEY (serving_id),
+    PRIMARY KEY (order_id),
     FOREIGN KEY (employee_id) REFERENCES employee(employee_id) ON DELETE CASCADE ON UPDATE CASCADE,
     FOREIGN KEY (food_order_id) REFERENCES food_order(food_order_id) ON DELETE CASCADE ON UPDATE CASCADE,
     FOREIGN KEY (customer_id) REFERENCES customer(customer_id) ON DELETE CASCADE ON UPDATE CASCADE
