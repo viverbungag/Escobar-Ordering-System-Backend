@@ -19,7 +19,7 @@ import static javax.persistence.GenerationType.IDENTITY;
 @Setter
 @ToString
 @EqualsAndHashCode
-@Entity(name = "order")
+@Entity(name = "customer_order")
 public class Order {
 
     @Id

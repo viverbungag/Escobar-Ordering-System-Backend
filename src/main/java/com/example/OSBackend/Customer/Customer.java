@@ -26,9 +26,11 @@ public class Customer {
     @Column(name = "customer_id")
     private Long customer_id;
 
+    @NonNull
     @Column(name = "payment")
     private BigDecimal payment;
 
+    @NonNull
     @Column(name = "change_from_payment")
     private BigDecimal changeFromPayment;
 }

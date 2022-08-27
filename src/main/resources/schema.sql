@@ -6,7 +6,7 @@ DROP TABLE IF EXISTS monthly_income_expenses CASCADE;
 DROP TABLE iF EXISTS monthly_transactions CASCADE;
 DROP TABLE IF EXISTS monthly_utility CASCADE;
 DROP TABLE IF EXISTS utility CASCADE;
-DROP TABLE IF EXISTS serving CASCADE;
+DROP TABLE IF EXISTS customer_order CASCADE;
 DROP TABLE IF EXISTS food_order CASCADE;
 DROP TABLE IF EXISTS customer CASCADE;
 DROP TABLE IF EXISTS menu_ingredients CASCADE;
@@ -186,10 +186,10 @@ CREATE TABLE IF NOT EXISTS food_order(
     FOREIGN KEY (menu_id) REFERENCES menu(menu_id) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
-CREATE TABLE IF NOT EXISTS order(
+CREATE TABLE IF NOT EXISTS customer_order(
     order_id BIGINT NOT NULL AUTO_INCREMENT,
     employee_id BIGINT,
-    orderTime DATETIME,
+    order_time DATETIME,
     food_order_id BIGINT,
     customer_id BIGINT,
     total_cost DECIMAL(10, 2),
@@ -248,9 +248,9 @@ CREATE TABLE IF NOT EXISTS daily_sales(
     daily_sales_id BIGINT NOT NULL AUTO_INCREMENT,
     sales_date DATE,
     daily_sales_earned DECIMAL(10, 2),
-    serving_id BIGINT,
+    order_id BIGINT,
     PRIMARY KEY (daily_sales_id),
-    FOREIGN KEY (serving_id) REFERENCES serving(serving_id) ON DELETE CASCADE ON UPDATE CASCADE
+    FOREIGN KEY (order_id) REFERENCES customer_order(order_id) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS monthly_sales(

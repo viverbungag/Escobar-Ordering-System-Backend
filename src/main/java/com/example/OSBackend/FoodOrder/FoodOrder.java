@@ -22,10 +22,12 @@ public class FoodOrder {
     @Column(name = "food_order_id")
     private Long foodOrderId;
 
+    @NonNull
     @ManyToOne
     @JoinColumn(name = "menu_id")
     private Menu menu;
 
+    @NonNull
     @Column(name = "order_quantity")
     private Integer orderQuantity;
 
