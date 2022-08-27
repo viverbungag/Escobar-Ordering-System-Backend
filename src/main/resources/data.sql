@@ -138,3 +138,16 @@ INSERT INTO transaction(transact_by, transaction_date, supplier_id, transaction_
 INSERT INTO account(account_username, account_password, employee_id) VALUES ('viver', 'password', 1);
 INSERT INTO account(account_username, account_password, employee_id) VALUES ('jay', 'password', 2);
 INSERT INTO account(account_username, account_password, employee_id) VALUES ('julienne', 'password', 3);
+
+INSERT INTO food_order(menu_id, menu_quantity) VALUES (1, 1);
+INSERT INTO food_order(menu_id, menu_quantity) VALUES (2, 2);
+INSERT INTO food_order(menu_id, menu_quantity) VALUES (3, 3);
+
+INSERT INTO customer_order(employee_id, order_time, payment, total_cost) VALUES (1, '2022-08-10', 1100, 300);
+INSERT INTO customer_order(employee_id, order_time, payment, total_cost) VALUES (2, '2022-09-10', 1200, 400);
+INSERT INTO customer_order(employee_id, order_time, payment, total_cost) VALUES (3, '2022-10-10', 1300, 500);
+
+INSERT INTO customer_food_order(food_order_id, order_id) VALUES (1, 1);
+INSERT INTO customer_food_order(food_order_id, order_id) VALUES (2, 2);
+INSERT INTO customer_food_order(food_order_id, order_id) VALUES (3, 3);
+

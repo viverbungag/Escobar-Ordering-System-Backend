@@ -28,7 +28,7 @@ public class FoodOrder {
     private Menu menu;
 
     @NonNull
-    @Column(name = "order_quantity")
-    private Integer orderQuantity;
+    @Column(name = "menu_quantity")
+    private Integer menuQuantity;
 
 }

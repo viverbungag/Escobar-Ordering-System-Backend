@@ -6,6 +6,7 @@ DROP TABLE IF EXISTS monthly_income_expenses CASCADE;
 DROP TABLE iF EXISTS monthly_transactions CASCADE;
 DROP TABLE IF EXISTS monthly_utility CASCADE;
 DROP TABLE IF EXISTS utility CASCADE;
+DROP TABLE IF EXISTS customer_food_order CASCADE;
 DROP TABLE IF EXISTS customer_order CASCADE;
 DROP TABLE IF EXISTS food_order CASCADE;
 DROP TABLE IF EXISTS customer CASCADE;
@@ -171,17 +172,10 @@ CREATE TABLE IF NOT EXISTS menu_ingredients(
     FOREIGN KEY (supply_id) REFERENCES supply(supply_id)
 );
 
-CREATE TABLE IF NOT EXISTS customer(
-    customer_id BIGINT NOT NULL AUTO_INCREMENT,
-    payment DECIMAL(10, 2),
-    change_from_payment DECIMAL(10,2),
-    PRIMARY KEY (customer_id)
-);
-
 CREATE TABLE IF NOT EXISTS food_order(
     food_order_id BIGINT NOT NULL AUTO_INCREMENT,
     menu_id BIGINT,
-    order_quantity INTEGER,
+    menu_quantity INTEGER,
     PRIMARY KEY (food_order_id),
     FOREIGN KEY (menu_id) REFERENCES menu(menu_id) ON DELETE CASCADE ON UPDATE CASCADE
 );
@@ -190,13 +184,19 @@ CREATE TABLE IF NOT EXISTS customer_order(
     order_id BIGINT NOT NULL AUTO_INCREMENT,
     employee_id BIGINT,
     order_time DATETIME,
-    food_order_id BIGINT,
-    customer_id BIGINT,
+    payment DECIMAL(10, 2),
     total_cost DECIMAL(10, 2),
     PRIMARY KEY (order_id),
-    FOREIGN KEY (employee_id) REFERENCES employee(employee_id) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY (employee_id) REFERENCES employee(employee_id) ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS customer_food_order(
+    customer_food_order_id BIGINT NOT NULL AUTO_INCREMENT,
+    food_order_id BIGINT,
+    order_id BIGINT,
+    PRIMARY KEY (customer_food_order_id),
     FOREIGN KEY (food_order_id) REFERENCES food_order(food_order_id) ON DELETE CASCADE ON UPDATE CASCADE,
-    FOREIGN KEY (customer_id) REFERENCES customer(customer_id) ON DELETE CASCADE ON UPDATE CASCADE
+    FOREIGN KEY (order_id) REFERENCES customer_order(order_id) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS utility(

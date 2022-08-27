@@ -1,6 +1,6 @@
 package com.example.OSBackend.Order;
 
-import com.example.OSBackend.Customer.Customer;
+import com.example.OSBackend.CustomerFoodOrder.CustomerFoodOrder;
 import com.example.OSBackend.Employee.Employee;
 import com.example.OSBackend.FoodOrder.FoodOrder;
 import lombok.*;
@@ -9,6 +9,7 @@ import javax.persistence.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.List;
 
 import static javax.persistence.GenerationType.IDENTITY;
 
@@ -32,19 +33,18 @@ public class Order {
     @JoinColumn(name = "employee_id")
     private Employee employee;
 
-    @Column(name = "serving_time")
-    private LocalDateTime servingTime;
+    @NonNull
+    @Column(name = "order_time")
+    private LocalDateTime orderTime;
+
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "order")
+    private List<CustomerFoodOrder> customerFoodOrders;
 
     @NonNull
-    @ManyToOne
-    @JoinColumn(name = "food_order_id")
-    private FoodOrder foodOrder;
+    @Column(name = "payment")
+    private BigDecimal payment;
 
     @NonNull
-    @ManyToOne
-    @JoinColumn(name = "customer_id")
-    private Customer customer;
-
     @Column(name = "total_cost")
     private BigDecimal totalCost;
 }
