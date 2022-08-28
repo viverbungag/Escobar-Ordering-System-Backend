@@ -3,12 +3,14 @@ package com.example.OSBackend.Order;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 @Repository("order_mysql")
 public interface OrderMySqlRepository extends  OrderDao, JpaRepository<Order, Long> {
@@ -21,8 +23,26 @@ public interface OrderMySqlRepository extends  OrderDao, JpaRepository<Order, Lo
     @Query(value = "INSERT INTO #{#entityName}(employee_id, order_time, payment, total_cost) " +
             "VALUES (:employeeId, :orderTime, :payment, :totalCost)",
             nativeQuery = true)
+    @Modifying
     void insertOrder(@Param("employeeId")Long employeeId,
                      @Param("orderTime")LocalDateTime orderTime,
                      @Param("payment")BigDecimal payment,
                      @Param("totalCost")BigDecimal totalCost);
+
+    @Query(value = "DELETE * FROM #{#entityName} " +
+            " WHERE order_time = :orderTime",
+            nativeQuery = true)
+    @Modifying
+    void removeOrder(@Param("orderTime")LocalDateTime orderTime);
+
+    @Query(value = "INSERT INTO customer_food_order(food_order_id, order_id) " +
+            "VALUES (:foodOrderId, :orderId)",
+            nativeQuery = true)
+    @Modifying
+    void insertCustomerFoodOrder(@Param("foodOrderId")Long foodOrderId,
+                                 @Param("orderId")Long orderId);
+
+    @Query(value = "SELECT * FROM #{#entityName} WHERE order_time = :orderTime",
+            nativeQuery = true)
+    Optional<Order> getOrderByOrderTime(@Param("orderTime")LocalDateTime orderTime);
 }

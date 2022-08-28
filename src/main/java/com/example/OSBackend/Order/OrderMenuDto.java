@@ -15,11 +15,11 @@ import java.util.List;
 @ToString
 public class OrderMenuDto {
 
-    private Long menuId;
-    private String menuName;
-    private BigDecimal menuPrice;
-    private Integer menuOrderQuantity;
-    private String menuCategoryName;
+    private Long orderMenuId;
+    private String orderMenuName;
+    private BigDecimal orderMenuPrice;
+    private Integer orderMenuQuantity;
+    private String orderMenuCategoryName;
     private List<MenuIngredientsDto> ingredients;
     private Integer numberOfServingsLeft;
     private Boolean isActive;

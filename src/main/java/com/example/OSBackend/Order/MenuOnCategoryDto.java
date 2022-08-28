@@ -12,5 +12,5 @@ import java.util.List;
 public class MenuOnCategoryDto {
 
     String menuCategoryName;
-    List<OrderMenuDto> orderMenuDto;
+    List<OrderMenuDto> orderMenu;
 }

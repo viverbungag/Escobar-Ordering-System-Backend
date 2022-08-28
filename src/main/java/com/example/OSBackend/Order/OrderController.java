@@ -26,9 +26,14 @@ public class OrderController {
         return orderService.getMenuBasedOnCategory(menuOnCategoryDto);
     }
 
-    @PostMapping("/ordered")
-    public void order (@RequestBody OrderListDto orderListDto){
-       orderService.order(orderListDto);
+    @PostMapping("/add")
+    public void addOrder (@RequestBody OrderDto orderDto){
+       orderService.addOrder(orderDto);
+    }
+
+    @PostMapping("/void")
+    public void voidOrder (@RequestBody OrderDto orderDto){
+        orderService.voidOrder(orderDto);
     }
 
 }

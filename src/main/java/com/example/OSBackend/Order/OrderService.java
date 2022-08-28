@@ -1,12 +1,23 @@
 package com.example.OSBackend.Order;
 
+import com.example.OSBackend.CustomerFoodOrder.CustomerFoodOrder;
+import com.example.OSBackend.CustomerFoodOrder.CustomerFoodOrderDto;
+import com.example.OSBackend.Employee.Employee;
+import com.example.OSBackend.Employee.EmployeeDao;
+import com.example.OSBackend.Employee.Exceptions.EmployeeNotFoundException;
+import com.example.OSBackend.FoodOrder.FoodOrder;
+import com.example.OSBackend.FoodOrder.FoodOrderDto;
+import com.example.OSBackend.Menu.Exceptions.MenuNotFoundException;
 import com.example.OSBackend.Menu.Menu;
 import com.example.OSBackend.Menu.MenuDao;
 import com.example.OSBackend.Menu.MenuDto;
 import com.example.OSBackend.MenuIngredients.MenuIngredients;
 import com.example.OSBackend.MenuIngredients.MenuIngredientsDto;
+import com.example.OSBackend.Order.Exceptions.OrderNotFoundException;
 import com.example.OSBackend.Pagination.PaginationDto;
+import com.example.OSBackend.Supply.Exceptions.SupplyNotFoundException;
 import com.example.OSBackend.Supply.Supply;
+import com.example.OSBackend.Supply.SupplyDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Page;
@@ -16,6 +27,8 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -34,13 +47,38 @@ public class OrderService {
     @Qualifier("menu_mysql")
     MenuDao menuRepository;
 
+    @Autowired
+    @Qualifier("employee_mysql")
+    EmployeeDao employeeRepository;
+
+    @Autowired
+    @Qualifier("supply_mysql")
+    SupplyDao supplyRepository;
+
+    private FoodOrderDto convertEntityToDto(FoodOrder foodOrder){
+        return new FoodOrderDto(
+                foodOrder.getFoodOrderId(),
+                convertEntityToDto(foodOrder.getMenu()),
+                foodOrder.getMenuQuantity());
+    }
+
+    private CustomerFoodOrderDto convertEntityToDto(CustomerFoodOrder customerFoodOrder){
+        return new CustomerFoodOrderDto(
+                customerFoodOrder.getCustomerFoodOrderId(),
+                convertEntityToDto(customerFoodOrder.getFoodOrder()));
+    }
+
 
     private OrderDto convertEntityToDto(Order order){
         return new OrderDto(
                 order.getOrderId(),
-                order.getEmployee(),
+                String.format("%s, %s", order.getEmployee().getLastName(), order.getEmployee().getFirstName()),
                 order.getOrderTime(),
-                order.getCustomerFoodOrders(),
+                order.getCustomerFoodOrders()
+                        .stream()
+                        .map((customerFoodOrder) ->
+                                convertEntityToDto(customerFoodOrder))
+                        .collect(Collectors.toList()),
                 order.getPayment(),
                 order.getTotalCost()
         );
@@ -149,7 +187,7 @@ public class OrderService {
                             .findFirst()
                             .orElseGet(
                                     () -> new MenuIngredientsDto(1L, "", 0.0, ""))
-                            .getQuantity() * menuOrder.getMenuOrderQuantity())
+                            .getQuantity() * menuOrder.getOrderMenuQuantity())
                     .reduce(0.0, (sum, currentQuantity) -> sum + currentQuantity);
 
             Double supplyQuantity = supply.getSupplyQuantity() - reducedQuantity;
@@ -169,7 +207,7 @@ public class OrderService {
     }
 
     public List<MenuDto> getMenuBasedOnCategory(MenuOnCategoryDto menuOnCategoryDto) {
-        List<OrderMenuDto> orderMenuOnCart = menuOnCategoryDto.getOrderMenuDto();
+        List<OrderMenuDto> orderMenuOnCart = menuOnCategoryDto.getOrderMenu();
         String menuCategoryName = menuOnCategoryDto.getMenuCategoryName();
 
         List<MenuDto> menus = menuRepository
@@ -185,7 +223,71 @@ public class OrderService {
     }
 
 
-    public void order(OrderListDto orderListDto) {
+    public void addOrder(OrderDto orderDto) {
         //TODO: When Customer ordered (Similar to stock out of transactions)
+        String[] employeeNameSplit = orderDto.getEmployeeFullName().split(", ");
+        String employeeLastName = employeeNameSplit[0];
+        String employeeFirstName = employeeNameSplit[1];
+        LocalDateTime orderTime = orderDto.getOrderTime();
+        BigDecimal payment = orderDto.getPayment();
+        BigDecimal totalCost = orderDto.getTotalCost();
+
+        Employee employee = employeeRepository
+                .getEmployeeByFirstAndLastName(employeeFirstName, employeeLastName)
+                .orElseThrow(() -> new EmployeeNotFoundException(employeeFirstName, employeeLastName));
+
+        List<CustomerFoodOrder> customerFoodOrders = orderDto.getCustomerFoodOrders()
+                .stream()
+                .map((customerFoodOrder) ->
+                        new CustomerFoodOrder(
+                        customerFoodOrder.getCustomerFoodOrderId(),
+                        null,
+                                new FoodOrder(
+                                        customerFoodOrder.getFoodOrder().getFoodOrderId(),
+                                        menuRepository
+                                                .getMenuByName(customerFoodOrder.getFoodOrder().getMenu().getMenuName())
+                                                .orElseThrow(() -> new MenuNotFoundException(customerFoodOrder.getFoodOrder().getMenu().getMenuName())),
+                                        customerFoodOrder.getFoodOrder().getMenuQuantity())))
+                .collect(Collectors.toList());
+
+        orderRepository.insertOrder(
+                employee.getEmployeeId(),
+                orderTime,
+                payment,
+                totalCost);
+
+        Order order = orderRepository
+                .getOrderByOrderTime(orderTime)
+                .orElseThrow(() -> new OrderNotFoundException(orderTime));
+
+
+        customerFoodOrders
+                .stream()
+                .forEach((customerFoodOrder) -> {
+                    Menu menu = customerFoodOrder.getFoodOrder().getMenu();
+                    Integer menuQuantity = customerFoodOrder.getFoodOrder().getMenuQuantity();
+
+                    FoodOrder foodOrder = customerFoodOrder.getFoodOrder();
+
+                    orderRepository.insertCustomerFoodOrder(foodOrder.getFoodOrderId(), order.getOrderId());
+
+                    menu.getMenuIngredients()
+                            .stream()
+                            .forEach((ingredient) -> {
+                                Supply ingredientSupply = ingredient.getSupply();
+
+                                Supply supply = supplyRepository
+                                        .getSupplyByName(ingredientSupply.getSupplyName())
+                                        .orElseThrow(() -> new SupplyNotFoundException(ingredientSupply.getSupplyName()));
+
+                                Double newQuantity = supply.getSupplyQuantity() - (ingredient.getQuantity() * menuQuantity);
+
+                                supply.setSupplyQuantity(newQuantity);
+                            });
+                });
+    }
+
+    public void voidOrder(OrderDto orderDto) {
+        orderRepository.removeOrder(orderDto.getOrderTime());
     }
 }

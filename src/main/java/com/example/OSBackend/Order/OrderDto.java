@@ -1,8 +1,6 @@
 package com.example.OSBackend.Order;
 
-import com.example.OSBackend.CustomerFoodOrder.CustomerFoodOrder;
-import com.example.OSBackend.Employee.Employee;
-import com.example.OSBackend.FoodOrder.FoodOrder;
+import com.example.OSBackend.CustomerFoodOrder.CustomerFoodOrderDto;
 import lombok.*;
 
 import java.math.BigDecimal;
@@ -16,9 +14,9 @@ import java.util.List;
 public class OrderDto {
 
     private Long orderId;
-    private Employee employee;
-    private LocalDateTime serveTime;
-    private List<CustomerFoodOrder> customerFoodOrders;
+    private String employeeFullName;
+    private LocalDateTime orderTime;
+    private List<CustomerFoodOrderDto> customerFoodOrders;
     private BigDecimal payment;
     private BigDecimal totalCost;
 }

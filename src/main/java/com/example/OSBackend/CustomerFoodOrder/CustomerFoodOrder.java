@@ -35,8 +35,4 @@ public class CustomerFoodOrder {
     @JoinColumn(name = "food_order_id")
     private FoodOrder foodOrder;
 
-    @NonNull
-    @Column(name = "quantity")
-    private Double quantity;
-
 }

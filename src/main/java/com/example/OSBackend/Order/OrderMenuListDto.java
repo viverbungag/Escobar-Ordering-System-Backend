@@ -4,5 +4,5 @@ import java.util.List;
 
 public class OrderMenuListDto {
 
-    List<OrderMenuDto> orderMenuDto;
+    List<OrderMenuDto> orderMenu;
 }

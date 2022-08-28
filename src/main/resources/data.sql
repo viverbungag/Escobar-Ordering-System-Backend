@@ -85,21 +85,21 @@ INSERT INTO supply(supply_name, supply_quantity, supplier_id, unit_of_measuremen
 INSERT INTO supply(supply_name, supply_quantity, supplier_id, unit_of_measurement_id, supply_category_id, minimum_quantity, is_active) VALUES ('Supply 16', 5, 16, 16, 16, 26, true);
 
 INSERT INTO menu(menu_name, menu_price, menu_category_id, is_active) VALUES ('Menu 1', 10, 1, true);
-INSERT INTO menu(menu_name, menu_price, menu_category_id, is_active) VALUES ('Menu 2', 11, 2, true);
-INSERT INTO menu(menu_name, menu_price, menu_category_id, is_active) VALUES ('Menu 3', 12, 3, true);
-INSERT INTO menu(menu_name, menu_price, menu_category_id, is_active) VALUES ('Menu 4', 13, 4, true);
-INSERT INTO menu(menu_name, menu_price, menu_category_id, is_active) VALUES ('Menu 5', 14, 5, true);
-INSERT INTO menu(menu_name, menu_price, menu_category_id, is_active) VALUES ('Menu 6', 15, 6, true);
-INSERT INTO menu(menu_name, menu_price, menu_category_id, is_active) VALUES ('Menu 7', 16, 7, true);
-INSERT INTO menu(menu_name, menu_price, menu_category_id, is_active) VALUES ('Menu 8', 17, 8, true);
-INSERT INTO menu(menu_name, menu_price, menu_category_id, is_active) VALUES ('Menu 9', 18, 9, true);
-INSERT INTO menu(menu_name, menu_price, menu_category_id, is_active) VALUES ('Menu 10', 19, 10, true);
-INSERT INTO menu(menu_name, menu_price, menu_category_id, is_active) VALUES ('Menu 11', 20, 11, true);
-INSERT INTO menu(menu_name, menu_price, menu_category_id, is_active) VALUES ('Menu 12', 21, 12, true);
-INSERT INTO menu(menu_name, menu_price, menu_category_id, is_active) VALUES ('Menu 13', 22, 13, true);
-INSERT INTO menu(menu_name, menu_price, menu_category_id, is_active) VALUES ('Menu 14', 23, 14, true);
-INSERT INTO menu(menu_name, menu_price, menu_category_id, is_active) VALUES ('Menu 15', 24, 15, true);
-INSERT INTO menu(menu_name, menu_price, menu_category_id, is_active) VALUES ('Menu 16', 25, 16, true);
+INSERT INTO menu(menu_name, menu_price, menu_category_id, is_active) VALUES ('Menu 2', 11, 1, true);
+INSERT INTO menu(menu_name, menu_price, menu_category_id, is_active) VALUES ('Menu 3', 12, 1, true);
+INSERT INTO menu(menu_name, menu_price, menu_category_id, is_active) VALUES ('Menu 4', 13, 2, true);
+INSERT INTO menu(menu_name, menu_price, menu_category_id, is_active) VALUES ('Menu 5', 14, 2, true);
+INSERT INTO menu(menu_name, menu_price, menu_category_id, is_active) VALUES ('Menu 6', 15, 3, true);
+INSERT INTO menu(menu_name, menu_price, menu_category_id, is_active) VALUES ('Menu 7', 16, 3, true);
+INSERT INTO menu(menu_name, menu_price, menu_category_id, is_active) VALUES ('Menu 8', 17, 3, true);
+INSERT INTO menu(menu_name, menu_price, menu_category_id, is_active) VALUES ('Menu 9', 18, 3, true);
+INSERT INTO menu(menu_name, menu_price, menu_category_id, is_active) VALUES ('Menu 10', 19, 3, true);
+INSERT INTO menu(menu_name, menu_price, menu_category_id, is_active) VALUES ('Menu 11', 20, 4, true);
+INSERT INTO menu(menu_name, menu_price, menu_category_id, is_active) VALUES ('Menu 12', 21, 4, true);
+INSERT INTO menu(menu_name, menu_price, menu_category_id, is_active) VALUES ('Menu 13', 22, 4, true);
+INSERT INTO menu(menu_name, menu_price, menu_category_id, is_active) VALUES ('Menu 14', 23, 5, true);
+INSERT INTO menu(menu_name, menu_price, menu_category_id, is_active) VALUES ('Menu 15', 24, 6, true);
+INSERT INTO menu(menu_name, menu_price, menu_category_id, is_active) VALUES ('Menu 16', 25, 7, true);
 
 INSERT INTO menu_ingredients(menu_id, supply_id, quantity) VALUES (1, 1, 3);
 INSERT INTO menu_ingredients(menu_id, supply_id, quantity) VALUES (1, 2, 4);
@@ -139,9 +139,9 @@ INSERT INTO account(account_username, account_password, employee_id) VALUES ('vi
 INSERT INTO account(account_username, account_password, employee_id) VALUES ('jay', 'password', 2);
 INSERT INTO account(account_username, account_password, employee_id) VALUES ('julienne', 'password', 3);
 
-INSERT INTO food_order(menu_id, menu_quantity) VALUES (1, 1);
-INSERT INTO food_order(menu_id, menu_quantity) VALUES (2, 2);
-INSERT INTO food_order(menu_id, menu_quantity) VALUES (3, 3);
+INSERT INTO food_order(menu_id, menu_quantity) VALUES (2, 1);
+INSERT INTO food_order(menu_id, menu_quantity) VALUES (3, 2);
+INSERT INTO food_order(menu_id, menu_quantity) VALUES (4, 3);
 
 INSERT INTO customer_order(employee_id, order_time, payment, total_cost) VALUES (1, '2022-08-10', 1100, 300);
 INSERT INTO customer_order(employee_id, order_time, payment, total_cost) VALUES (2, '2022-09-10', 1200, 400);

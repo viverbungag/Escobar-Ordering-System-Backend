@@ -11,4 +11,8 @@ public interface MenuDao {
 
     List<Menu> getMenuBasedOnCategory(String menuCategoryName);
 
+    Optional<Menu> getMenuById(Long menuId);
+
+    Optional<Menu> getMenuByName(String menuName);
+
 }
