@@ -288,6 +288,54 @@ public class OrderService {
     }
 
     public void voidOrder(OrderDto orderDto) {
+        LocalDateTime orderTime = orderDto.getOrderTime();
+
+        Order order = orderRepository
+                .getOrderByOrderTime(orderTime)
+                .orElseThrow(() -> new OrderNotFoundException(orderTime));
+
+        List<CustomerFoodOrder> customerFoodOrders = orderDto.getCustomerFoodOrders()
+                .stream()
+                .map((customerFoodOrder) ->
+                        new CustomerFoodOrder(
+                                customerFoodOrder.getCustomerFoodOrderId(),
+                                null,
+                                new FoodOrder(
+                                        customerFoodOrder.getFoodOrder().getFoodOrderId(),
+                                        menuRepository
+                                                .getMenuByName(customerFoodOrder.getFoodOrder().getMenu().getMenuName())
+                                                .orElseThrow(() -> new MenuNotFoundException(customerFoodOrder.getFoodOrder().getMenu().getMenuName())),
+                                        customerFoodOrder.getFoodOrder().getMenuQuantity())))
+                .collect(Collectors.toList());
+
+
+        customerFoodOrders
+                .stream()
+                .forEach((customerFoodOrder) -> {
+                    Menu menu = customerFoodOrder.getFoodOrder().getMenu();
+                    Integer menuQuantity = customerFoodOrder.getFoodOrder().getMenuQuantity();
+
+                    FoodOrder foodOrder = customerFoodOrder.getFoodOrder();
+
+                    orderRepository.insertCustomerFoodOrder(foodOrder.getFoodOrderId(), order.getOrderId());
+
+                    menu.getMenuIngredients()
+                            .stream()
+                            .forEach((ingredient) -> {
+                                Supply ingredientSupply = ingredient.getSupply();
+
+                                Supply supply = supplyRepository
+                                        .getSupplyByName(ingredientSupply.getSupplyName())
+                                        .orElseThrow(() -> new SupplyNotFoundException(ingredientSupply.getSupplyName()));
+
+                                Double newQuantity = supply.getSupplyQuantity() + (ingredient.getQuantity() * menuQuantity);
+
+                                supply.setSupplyQuantity(newQuantity);
+                            });
+                });
+
+
+
         orderRepository.removeOrder(orderDto.getOrderTime());
     }
 }
