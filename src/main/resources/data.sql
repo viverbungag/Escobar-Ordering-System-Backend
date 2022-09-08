@@ -114,8 +114,9 @@ INSERT INTO menu_ingredients(menu_id, supply_id, quantity) VALUES (1, 10, 3);
 INSERT INTO menu_ingredients(menu_id, supply_id, quantity) VALUES (1, 11, 4);
 INSERT INTO menu_ingredients(menu_id, supply_id, quantity) VALUES (1, 12, 5);
 INSERT INTO menu_ingredients(menu_id, supply_id, quantity) VALUES (2, 4, 1);
+INSERT INTO menu_ingredients(menu_id, supply_id, quantity) VALUES (2, 5, 1);
 INSERT INTO menu_ingredients(menu_id, supply_id, quantity) VALUES (3, 5, 1);
-INSERT INTO menu_ingredients(menu_id, supply_id, quantity) VALUES (4, 6, 1);
+INSERT INTO menu_ingredients(menu_id, supply_id, quantity) VALUES (4, 4, 1);
 INSERT INTO menu_ingredients(menu_id, supply_id, quantity) VALUES (5, 7, 1);
 INSERT INTO menu_ingredients(menu_id, supply_id, quantity) VALUES (6, 8, 1);
 INSERT INTO menu_ingredients(menu_id, supply_id, quantity) VALUES (7, 9, 1);
@@ -127,9 +128,66 @@ INSERT INTO menu_ingredients(menu_id, supply_id, quantity) VALUES (12, 14, 1);
 INSERT INTO menu_ingredients(menu_id, supply_id, quantity) VALUES (13, 15, 1);
 INSERT INTO menu_ingredients(menu_id, supply_id, quantity) VALUES (14, 16, 1);
 
-INSERT INTO employee(employee_first_name, employee_last_name) VALUES ("Viver", "Bungag");
-INSERT INTO employee(employee_first_name, employee_last_name) VALUES ("Jay", "Tan");
-INSERT INTO employee(employee_first_name, employee_last_name) VALUES ("Julienne", "Panes");
+INSERT INTO employee_position(employee_position_name, is_active) VALUES ("Waiter", true);
+INSERT INTO employee_position(employee_position_name, is_active) VALUES ("Manager", true);
+INSERT INTO employee_position(employee_position_name, is_active) VALUES ("Chef", true);
+
+INSERT INTO employee_type(employee_type_name, is_active) VALUES ("Full-Time", true);
+INSERT INTO employee_type(employee_type_name, is_active) VALUES ("Part-Time", true);
+INSERT INTO employee_type(employee_type_name, is_active) VALUES ("Owner", true);
+
+
+INSERT INTO employee_attendance(attendance_time, attendance_type) VALUES ('2022-08-10 08:00:00', 'CHECK_IN');
+INSERT INTO employee_attendance(attendance_time, attendance_type) VALUES ('2022-08-10 17:00:00', 'CHECK_OUT');
+
+INSERT INTO employee_attendance(attendance_time, attendance_type) VALUES ('2022-08-11 08:11:00', 'CHECK_IN');
+INSERT INTO employee_attendance(attendance_time, attendance_type) VALUES ('2022-08-10 17:00:00', 'CHECK_OUT');
+
+INSERT INTO employee_attendance(attendance_time, attendance_type) VALUES ('2022-08-12 08:15:00', 'CHECK_IN');
+INSERT INTO employee_attendance(attendance_time, attendance_type) VALUES ('2022-08-10 17:00:00', 'CHECK_OUT');
+
+INSERT INTO employee_attendance(attendance_time, attendance_type) VALUES ('2022-08-10 08:22:00', 'CHECK_IN');
+INSERT INTO employee_attendance(attendance_time, attendance_type) VALUES ('2022-08-10 17:00:00', 'CHECK_OUT');
+
+INSERT INTO employee_attendance(attendance_time, attendance_type) VALUES ('2022-08-13 08:32:00', 'CHECK_IN');
+INSERT INTO employee_attendance(attendance_time, attendance_type) VALUES ('2022-08-10 17:00:00', 'CHECK_OUT');
+
+INSERT INTO employee_attendance(attendance_time, attendance_type) VALUES ('2022-08-14 08:03:00', 'CHECK_IN');
+INSERT INTO employee_attendance(attendance_time, attendance_type) VALUES ('2022-08-10 17:00:00', 'CHECK_OUT');
+
+INSERT INTO employee_attendance(attendance_time, attendance_type) VALUES ('2022-08-11 08:00:00', 'CHECK_IN');
+INSERT INTO employee_attendance(attendance_time, attendance_type) VALUES ('2022-08-10 17:00:00', 'CHECK_OUT');
+
+INSERT INTO employee_attendance(attendance_time, attendance_type) VALUES ('2022-08-12 08:01:00', 'CHECK_IN');
+INSERT INTO employee_attendance(attendance_time, attendance_type) VALUES ('2022-08-10 17:00:00', 'CHECK_OUT');
+
+INSERT INTO employee_attendance(attendance_time, attendance_type) VALUES ('2022-08-13 08:02:00', 'CHECK_IN');
+INSERT INTO employee_attendance(attendance_time, attendance_type) VALUES ('2022-08-10 17:00:00', 'CHECK_OUT');
+
+INSERT INTO employee(employee_first_name, employee_last_name, employee_address, employee_contact_number, date_employed, employee_position_id, employee_type_id, superior_employee_id, is_active) VALUES ("Jay", "Tan", "Davao", "0923456789", '2020-03-22', 2, 3, NULL, true);
+INSERT INTO employee(employee_first_name, employee_last_name, employee_address, employee_contact_number, date_employed, employee_position_id, employee_type_id, superior_employee_id, is_active) VALUES ("Viver", "Bungag", "Manila", "0912345678", '2020-01-10', 1, 2, 2, true);
+INSERT INTO employee(employee_first_name, employee_last_name, employee_address, employee_contact_number, date_employed, employee_position_id, employee_type_id, superior_employee_id, is_active) VALUES ("Julienne", "Panes", "Cebu", "0934567891", '2019-12-25', 3, 1, 2, true);
+
+INSERT INTO employee_attendance_join(employee_id, employee_attendance_id) VALUES (1, 1);
+INSERT INTO employee_attendance_join(employee_id, employee_attendance_id) VALUES (1, 2);
+INSERT INTO employee_attendance_join(employee_id, employee_attendance_id) VALUES (1, 3);
+INSERT INTO employee_attendance_join(employee_id, employee_attendance_id) VALUES (1, 4);
+INSERT INTO employee_attendance_join(employee_id, employee_attendance_id) VALUES (1, 5);
+INSERT INTO employee_attendance_join(employee_id, employee_attendance_id) VALUES (1, 6);
+
+INSERT INTO employee_attendance_join(employee_id, employee_attendance_id) VALUES (2, 7);
+INSERT INTO employee_attendance_join(employee_id, employee_attendance_id) VALUES (2, 8);
+INSERT INTO employee_attendance_join(employee_id, employee_attendance_id) VALUES (2, 9);
+INSERT INTO employee_attendance_join(employee_id, employee_attendance_id) VALUES (2, 10);
+INSERT INTO employee_attendance_join(employee_id, employee_attendance_id) VALUES (2, 11);
+INSERT INTO employee_attendance_join(employee_id, employee_attendance_id) VALUES (2, 12);
+
+INSERT INTO employee_attendance_join(employee_id, employee_attendance_id) VALUES (3, 13);
+INSERT INTO employee_attendance_join(employee_id, employee_attendance_id) VALUES (3, 14);
+INSERT INTO employee_attendance_join(employee_id, employee_attendance_id) VALUES (3, 15);
+INSERT INTO employee_attendance_join(employee_id, employee_attendance_id) VALUES (3, 16);
+INSERT INTO employee_attendance_join(employee_id, employee_attendance_id) VALUES (3, 17);
+INSERT INTO employee_attendance_join(employee_id, employee_attendance_id) VALUES (3, 18);
 
 INSERT INTO transaction(transact_by, transaction_date, supplier_id, transaction_supply_quantity, supply_id, price_per_unit, expiry_date, transaction_type) VALUES (1, '2022-08-10', 1, 5, 1, 20, '2022-09-10', 'STOCK_IN');
 INSERT INTO transaction(transact_by, transaction_date, supplier_id, transaction_supply_quantity, supply_id, price_per_unit, expiry_date, transaction_type) VALUES (2, '2022-09-11', 2, 5, 2, 30, '2022-10-11', 'STOCK_IN');
@@ -148,6 +206,10 @@ INSERT INTO customer_order(employee_id, order_time, payment, total_cost) VALUES 
 INSERT INTO customer_order(employee_id, order_time, payment, total_cost) VALUES (3, '2022-10-10', 1300, 500);
 
 INSERT INTO customer_food_order(food_order_id, order_id) VALUES (1, 1);
+INSERT INTO customer_food_order(food_order_id, order_id) VALUES (2, 1);
+INSERT INTO customer_food_order(food_order_id, order_id) VALUES (3, 1);
 INSERT INTO customer_food_order(food_order_id, order_id) VALUES (2, 2);
 INSERT INTO customer_food_order(food_order_id, order_id) VALUES (3, 3);
+
+
 

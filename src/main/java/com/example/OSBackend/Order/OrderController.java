@@ -23,6 +23,7 @@ public class OrderController {
 
     @PostMapping("/menu-on-category")
     public List<MenuDto> getMenuBasedOnCategory(@RequestBody MenuOnCategoryDto menuOnCategoryDto){
+        System.out.println(menuOnCategoryDto);
         return orderService.getMenuBasedOnCategory(menuOnCategoryDto);
     }
 

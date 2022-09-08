@@ -183,7 +183,7 @@ public class OrderService {
                     .map((menuOrder) -> menuOrder
                             .getIngredients()
                             .stream()
-                            .filter(currentIngredient -> supply.getSupplyName() == currentIngredient.getSupplyName())
+                            .filter(currentIngredient -> supply.getSupplyName().equals(currentIngredient.getSupplyName()))
                             .findFirst()
                             .orElseGet(
                                     () -> new MenuIngredientsDto(1L, "", 0.0, ""))
@@ -191,7 +191,6 @@ public class OrderService {
                     .reduce(0.0, (sum, currentQuantity) -> sum + currentQuantity);
 
             Double supplyQuantity = supply.getSupplyQuantity() - reducedQuantity;
-
             Integer ingredientAvailableServings = Integer.valueOf((int)Math.floor(supplyQuantity / ingredientQuantity));
 
             if (currentNumberOfServings == null || ingredientAvailableServings < currentNumberOfServings){
