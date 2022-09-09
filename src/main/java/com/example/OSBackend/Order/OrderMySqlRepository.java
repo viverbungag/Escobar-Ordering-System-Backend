@@ -21,19 +21,19 @@ public interface OrderMySqlRepository extends  OrderDao, JpaRepository<Order, Lo
     Page<Order> getAllPagedOrders(Pageable pageable);
 
     @Query(value = "INSERT INTO #{#entityName}(employee_id, order_time, payment, total_cost) " +
-            "VALUES (:employeeId, :orderTime, :payment, :totalCost)",
+            "VALUES (:employeeId, :orderTime, :payment, :totalCost);SELECT LAST_INSERT_ID();",
             nativeQuery = true)
     @Modifying
-    void insertOrder(@Param("employeeId")Long employeeId,
+    Long insertOrder(@Param("employeeId")Long employeeId,
                      @Param("orderTime")LocalDateTime orderTime,
                      @Param("payment")BigDecimal payment,
                      @Param("totalCost")BigDecimal totalCost);
 
-    @Query(value = "DELETE * FROM #{#entityName} " +
-            " WHERE order_time = :orderTime",
+    @Query(value = "DELETE FROM #{#entityName} " +
+            "WHERE order_id = :orderId",
             nativeQuery = true)
     @Modifying
-    void removeOrder(@Param("orderTime")LocalDateTime orderTime);
+    void removeOrder(@Param("orderId")Long orderId);
 
     @Query(value = "INSERT INTO customer_food_order(food_order_id, order_id) " +
             "VALUES (:foodOrderId, :orderId)",
@@ -45,4 +45,9 @@ public interface OrderMySqlRepository extends  OrderDao, JpaRepository<Order, Lo
     @Query(value = "SELECT * FROM #{#entityName} WHERE order_time = :orderTime",
             nativeQuery = true)
     Optional<Order> getOrderByOrderTime(@Param("orderTime")LocalDateTime orderTime);
+
+    @Query(value = "SELECT * FROM #{#entityName} WHERE order_id = :orderId",
+            nativeQuery = true)
+    Optional<Order> getOrderByOrderId(@Param("orderId")Long orderId);
+
 }

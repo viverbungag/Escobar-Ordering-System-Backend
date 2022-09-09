@@ -6,6 +6,7 @@ import com.example.OSBackend.Employee.Employee;
 import com.example.OSBackend.Employee.EmployeeDao;
 import com.example.OSBackend.Employee.Exceptions.EmployeeNotFoundException;
 import com.example.OSBackend.FoodOrder.FoodOrder;
+import com.example.OSBackend.FoodOrder.FoodOrderDao;
 import com.example.OSBackend.FoodOrder.FoodOrderDto;
 import com.example.OSBackend.Menu.Exceptions.MenuNotFoundException;
 import com.example.OSBackend.Menu.Menu;
@@ -44,6 +45,10 @@ public class OrderService {
     OrderDao orderRepository;
 
     @Autowired
+    @Qualifier("order_jdbc_mysql")
+    OrderDao orderJdbcRepository;
+
+    @Autowired
     @Qualifier("menu_mysql")
     MenuDao menuRepository;
 
@@ -54,6 +59,10 @@ public class OrderService {
     @Autowired
     @Qualifier("supply_mysql")
     SupplyDao supplyRepository;
+
+    @Autowired
+    @Qualifier("foodOrder_jdbc_mysql")
+    FoodOrderDao foodOrderJdbcRepository;
 
     private FoodOrderDto convertEntityToDto(FoodOrder foodOrder){
         return new FoodOrderDto(
@@ -230,45 +239,32 @@ public class OrderService {
         LocalDateTime orderTime = orderDto.getOrderTime();
         BigDecimal payment = orderDto.getPayment();
         BigDecimal totalCost = orderDto.getTotalCost();
+        List<CustomerFoodOrderDto> customerFoodOrders = orderDto.getCustomerFoodOrders();
 
         Employee employee = employeeRepository
                 .getEmployeeByFirstAndLastName(employeeFirstName, employeeLastName)
                 .orElseThrow(() -> new EmployeeNotFoundException(employeeFirstName, employeeLastName));
 
-        List<CustomerFoodOrder> customerFoodOrders = orderDto.getCustomerFoodOrders()
-                .stream()
-                .map((customerFoodOrder) ->
-                        new CustomerFoodOrder(
-                        customerFoodOrder.getCustomerFoodOrderId(),
-                        null,
-                                new FoodOrder(
-                                        customerFoodOrder.getFoodOrder().getFoodOrderId(),
-                                        menuRepository
-                                                .getMenuByName(customerFoodOrder.getFoodOrder().getMenu().getMenuName())
-                                                .orElseThrow(() -> new MenuNotFoundException(customerFoodOrder.getFoodOrder().getMenu().getMenuName())),
-                                        customerFoodOrder.getFoodOrder().getMenuQuantity())))
-                .collect(Collectors.toList());
-
-        orderRepository.insertOrder(
+        Long orderId = orderJdbcRepository.insertOrder(
                 employee.getEmployeeId(),
                 orderTime,
                 payment,
                 totalCost);
 
-        Order order = orderRepository
-                .getOrderByOrderTime(orderTime)
-                .orElseThrow(() -> new OrderNotFoundException(orderTime));
-
 
         customerFoodOrders
                 .stream()
                 .forEach((customerFoodOrder) -> {
-                    Menu menu = customerFoodOrder.getFoodOrder().getMenu();
+                    String menuName = customerFoodOrder.getFoodOrder().getMenu().getMenuName();
                     Integer menuQuantity = customerFoodOrder.getFoodOrder().getMenuQuantity();
 
-                    FoodOrder foodOrder = customerFoodOrder.getFoodOrder();
+                    Menu menu = menuRepository
+                            .getMenuByName(menuName)
+                            .orElseThrow(() -> new MenuNotFoundException(menuName));
 
-                    orderRepository.insertCustomerFoodOrder(foodOrder.getFoodOrderId(), order.getOrderId());
+                    Long foodOrderId = foodOrderJdbcRepository.insertFoodOrder(menu.getMenuId(), menuQuantity);
+
+                    orderRepository.insertCustomerFoodOrder(foodOrderId, orderId);
 
                     menu.getMenuIngredients()
                             .stream()
@@ -286,29 +282,28 @@ public class OrderService {
                 });
     }
 
-    public void voidOrder(OrderDto orderDto) {
-        LocalDateTime orderTime = orderDto.getOrderTime();
+    public void voidOrder(Long orderId) {
 
         Order order = orderRepository
-                .getOrderByOrderTime(orderTime)
-                .orElseThrow(() -> new OrderNotFoundException(orderTime));
+                .getOrderByOrderId(orderId)
+                .orElseThrow(() -> new OrderNotFoundException(orderId));
 
-        List<CustomerFoodOrder> customerFoodOrders = orderDto.getCustomerFoodOrders()
-                .stream()
-                .map((customerFoodOrder) ->
-                        new CustomerFoodOrder(
-                                customerFoodOrder.getCustomerFoodOrderId(),
-                                null,
-                                new FoodOrder(
-                                        customerFoodOrder.getFoodOrder().getFoodOrderId(),
-                                        menuRepository
-                                                .getMenuByName(customerFoodOrder.getFoodOrder().getMenu().getMenuName())
-                                                .orElseThrow(() -> new MenuNotFoundException(customerFoodOrder.getFoodOrder().getMenu().getMenuName())),
-                                        customerFoodOrder.getFoodOrder().getMenuQuantity())))
-                .collect(Collectors.toList());
+//        List<CustomerFoodOrder> customerFoodOrders = order.getCustomerFoodOrders()
+//                .stream()
+//                .map((customerFoodOrder) ->
+//                        new CustomerFoodOrder(
+//                                customerFoodOrder.getCustomerFoodOrderId(),
+//                                null,
+//                                new FoodOrder(
+//                                        customerFoodOrder.getFoodOrder().getFoodOrderId(),
+//                                        menuRepository
+//                                                .getMenuByName(customerFoodOrder.getFoodOrder().getMenu().getMenuName())
+//                                                .orElseThrow(() -> new MenuNotFoundException(customerFoodOrder.getFoodOrder().getMenu().getMenuName())),
+//                                        customerFoodOrder.getFoodOrder().getMenuQuantity())))
+//                .collect(Collectors.toList());
 
 
-        customerFoodOrders
+        order.getCustomerFoodOrders()
                 .stream()
                 .forEach((customerFoodOrder) -> {
                     Menu menu = customerFoodOrder.getFoodOrder().getMenu();
@@ -335,6 +330,6 @@ public class OrderService {
 
 
 
-        orderRepository.removeOrder(orderDto.getOrderTime());
+        orderRepository.removeOrder(orderId);
     }
 }

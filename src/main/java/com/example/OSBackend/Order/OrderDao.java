@@ -14,11 +14,14 @@ public interface OrderDao {
 
     Page<Order> getAllPagedOrders(Pageable pageable);
 
-    void insertOrder(Long employeeId, LocalDateTime orderTime, BigDecimal payment, BigDecimal totalCost);
+    Long insertOrder(Long employeeId, LocalDateTime orderTime, BigDecimal payment, BigDecimal totalCost);
 
     void insertCustomerFoodOrder(Long foodOrderId, Long orderId);
 
     Optional<Order> getOrderByOrderTime(LocalDateTime orderTime);
 
-    void removeOrder(LocalDateTime orderTime);
+    void removeOrder(Long orderId);
+
+    Optional<Order> getOrderByOrderId(Long orderId);
+
 }

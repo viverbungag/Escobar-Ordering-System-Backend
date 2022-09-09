@@ -32,9 +32,9 @@ public class OrderController {
        orderService.addOrder(orderDto);
     }
 
-    @PostMapping("/void")
-    public void voidOrder (@RequestBody OrderDto orderDto){
-        orderService.voidOrder(orderDto);
+    @DeleteMapping("/void/{orderId}")
+    public void voidOrder (@PathVariable Long orderId){
+        orderService.voidOrder(orderId);
     }
 
 }
