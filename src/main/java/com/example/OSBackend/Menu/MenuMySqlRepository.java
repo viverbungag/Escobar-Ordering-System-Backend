@@ -17,6 +17,10 @@ public interface MenuMySqlRepository extends MenuDao, JpaRepository<Menu, Long> 
             nativeQuery = true)
     List<Menu> getMenuBasedOnCategory(@Param("menuCategoryName") String menuCategoryName);
 
+    @Query(value = "SELECT * FROM #{#entityName} WHERE is_active=true",
+            nativeQuery = true)
+    List<Menu> getAllActiveMenu();
+
     @Query(value = "SELECT * FROM #{#entityName} WHERE menu_id = :menuId",
             nativeQuery = true)
     Optional<Menu> getMenuById(@Param("menuId") Long menuId);

@@ -15,4 +15,6 @@ public interface MenuDao {
 
     Optional<Menu> getMenuByName(String menuName);
 
+    List<Menu> getAllActiveMenu();
+
 }
