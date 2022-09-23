@@ -209,6 +209,7 @@ CREATE TABLE IF NOT EXISTS customer_order(
     employee_id BIGINT,
     order_time DATETIME,
     payment DECIMAL(10, 2),
+    discount DECIMAL(10, 2),
     total_cost DECIMAL(10, 2),
     PRIMARY KEY (order_id),
     FOREIGN KEY (employee_id) REFERENCES employee(employee_id) ON DELETE CASCADE ON UPDATE CASCADE

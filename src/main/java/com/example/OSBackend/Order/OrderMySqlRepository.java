@@ -20,14 +20,15 @@ public interface OrderMySqlRepository extends  OrderDao, JpaRepository<Order, Lo
             nativeQuery = true)
     Page<Order> getAllPagedOrders(Pageable pageable);
 
-    @Query(value = "INSERT INTO #{#entityName}(employee_id, order_time, payment, total_cost) " +
-            "VALUES (:employeeId, :orderTime, :payment, :totalCost);SELECT LAST_INSERT_ID();",
+    @Query(value = "INSERT INTO #{#entityName}(employee_id, order_time, payment, total_cost, discount) " +
+            "VALUES (:employeeId, :orderTime, :payment, :totalCost, :discount);",
             nativeQuery = true)
     @Modifying
     Long insertOrder(@Param("employeeId")Long employeeId,
                      @Param("orderTime")LocalDateTime orderTime,
                      @Param("payment")BigDecimal payment,
-                     @Param("totalCost")BigDecimal totalCost);
+                     @Param("totalCost")BigDecimal totalCost,
+                     @Param("discount")BigDecimal discount);
 
     @Query(value = "DELETE FROM #{#entityName} " +
             "WHERE order_id = :orderId",

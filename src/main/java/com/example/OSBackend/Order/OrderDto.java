@@ -18,5 +18,6 @@ public class OrderDto {
     private LocalDateTime orderTime;
     private List<CustomerFoodOrderDto> customerFoodOrders;
     private BigDecimal payment;
+    private BigDecimal discount;
     private BigDecimal totalCost;
 }

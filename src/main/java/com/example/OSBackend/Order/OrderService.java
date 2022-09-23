@@ -89,6 +89,7 @@ public class OrderService {
                                 convertEntityToDto(customerFoodOrder))
                         .collect(Collectors.toList()),
                 order.getPayment(),
+                order.getDiscount(),
                 order.getTotalCost()
         );
     }
@@ -239,6 +240,7 @@ public class OrderService {
         LocalDateTime orderTime = orderDto.getOrderTime();
         BigDecimal payment = orderDto.getPayment();
         BigDecimal totalCost = orderDto.getTotalCost();
+        BigDecimal discount = orderDto.getDiscount();
         List<CustomerFoodOrderDto> customerFoodOrders = orderDto.getCustomerFoodOrders();
 
         Employee employee = employeeRepository
@@ -249,7 +251,8 @@ public class OrderService {
                 employee.getEmployeeId(),
                 orderTime,
                 payment,
-                totalCost);
+                totalCost,
+                discount);
 
 
         customerFoodOrders

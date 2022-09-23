@@ -45,6 +45,10 @@ public class Order {
     private BigDecimal payment;
 
     @NonNull
+    @Column(name = "discount")
+    private BigDecimal discount;
+
+    @NonNull
     @Column(name = "total_cost")
     private BigDecimal totalCost;
 }
