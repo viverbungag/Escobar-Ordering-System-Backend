@@ -14,6 +14,7 @@ import com.example.OSBackend.Menu.MenuDao;
 import com.example.OSBackend.Menu.MenuDto;
 import com.example.OSBackend.MenuIngredients.MenuIngredients;
 import com.example.OSBackend.MenuIngredients.MenuIngredientsDto;
+import com.example.OSBackend.Order.Exceptions.OrderDiscountOutOfRangeException;
 import com.example.OSBackend.Order.Exceptions.OrderNotFoundException;
 import com.example.OSBackend.Pagination.PaginationDto;
 import com.example.OSBackend.Supply.Exceptions.SupplyNotFoundException;
@@ -242,6 +243,12 @@ public class OrderService {
         BigDecimal totalCost = orderDto.getTotalCost();
         BigDecimal discount = orderDto.getDiscount();
         List<CustomerFoodOrderDto> customerFoodOrders = orderDto.getCustomerFoodOrders();
+
+        if (discount == null ||
+                discount.compareTo(new BigDecimal(0)) < 0 ||
+                discount.compareTo(new BigDecimal(100)) > 0){
+            throw new OrderDiscountOutOfRangeException();
+        }
 
         Employee employee = employeeRepository
                 .getEmployeeByFirstAndLastName(employeeFirstName, employeeLastName)
